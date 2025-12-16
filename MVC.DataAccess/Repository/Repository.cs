@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
+using MVC.DataAccess.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using MVC.DataAccess.Data;
-using MVC.DataAccess.Repository.IRepository;
+
 
 
 namespace MVC.DataAccess.Repository
