@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MVC.Data;
+using MVC.DataAccess.Data;
 using MVC.Models;
+
 
 namespace MVC.Controllers
 {
