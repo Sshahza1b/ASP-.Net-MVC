@@ -4,8 +4,9 @@ using MVC.DataAccess.Repository.IRepository;
 using MVC.Models;
 
 
-namespace MVC.Controllers
+namespace MVC.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
