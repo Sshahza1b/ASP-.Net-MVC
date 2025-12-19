@@ -63,8 +63,6 @@ namespace MVC.Areas.Admin.Controllers
                 ;
             }
             
-            
-
         }
 
         public IActionResult Edit(int id)
