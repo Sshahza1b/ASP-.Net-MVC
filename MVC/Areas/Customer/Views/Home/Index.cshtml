@@ -1,8 +1,157 @@
-﻿@{
+﻿@model IEnumerable<MVC.Models.Product>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div id="homeSlider" class="carousel slide mb-5 shadow" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#homeSlider" data-bs-slide-to="0" class="active"></button>
+        <button type="button" data-bs-target="#homeSlider" data-bs-slide-to="1"></button>
+    </div>
+    <div class="carousel-inner rounded">
+        <div class="carousel-item active">
+            <img src="https://placehold.co/1200x450/1a1a1a/white?text=New+Arrivals+2025" class="d-block w-100" alt="Slider 1">
+            <div class="carousel-caption d-none d-md-block text-start">
+                <h2 class="display-3 fw-bold">Latest Collection</h2>
+                <p class="fs-4">Discover the best books and gadgets at unbeatable prices.</p>
+                <a href="#product-list" class="btn btn-primary btn-lg px-5">Shop Now</a>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="https://placehold.co/1200x450/004a99/white?text=Mega+Sale+Live" class="d-block w-100" alt="Slider 2">
+            <div class="carousel-caption d-none d-md-block">
+                <h2 class="display-3 fw-bold">Flat 50% Off</h2>
+                <p class="fs-4">Limited time offer on all Category items.</p>
+                <a href="#product-list" class="btn btn-light btn-lg px-5">Browse All</a>
+            </div>
+        </div>
+    </div>
 </div>
+
+<div class="container" id="product-list">
+    <div class="row text-center mb-5 g-4">
+        <div class="col-md-3">
+            <div class="p-4 bg-light rounded-3 shadow-sm border-bottom border-primary border-4">
+                <i class="bi bi-truck fs-1 text-primary"></i>
+                <h6 class="mt-2 fw-bold">Fast Delivery</h6>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="p-4 bg-light rounded-3 shadow-sm border-bottom border-success border-4">
+                <i class="bi bi-shield-lock fs-1 text-success"></i>
+                <h6 class="mt-2 fw-bold">Secure Payment</h6>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="p-4 bg-light rounded-3 shadow-sm border-bottom border-warning border-4">
+                <i class="bi bi-arrow-repeat fs-1 text-warning"></i>
+                <h6 class="mt-2 fw-bold">Easy Returns</h6>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="p-4 bg-light rounded-3 shadow-sm border-bottom border-danger border-4">
+                <i class="bi bi-headset fs-1 text-danger"></i>
+                <h6 class="mt-2 fw-bold">24/7 Support</h6>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="text-primary fw-bold mb-4 border-start border-primary border-4 ps-3">Featured Products</h3>
+
+    <div class="row pb-3">
+        @foreach (var product in Model)
+        {
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm product-card">
+                    <div class="position-relative overflow-hidden">
+                        <img src="@product.ImageUrl" class="card-img-top rounded-top" alt="@product.Title"
+                             style="height: 280px; object-fit: cover;">
+                        <span class="position-absolute top-0 start-0 bg-primary text-white px-3 py-1 m-2 rounded-pill small">
+                            @product.Category?.Name
+                        </span>
+                    </div>
+
+                    <div class="card-body">
+                        <h5 class="card-title text-dark fw-bold text-truncate">@product.Title</h5>
+                        <p class="card-text text-muted small">by <span class="fw-bold">@product.Author</span></p>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-decoration-line-through text-muted small">@product.ListPrice.ToString("c")</span>
+                                <h5 class="text-primary fw-bold m-0">@product.Price100.ToString("c")</h5>
+                            </div>
+                            <button onclick="showDetails(@product.Id)" class="btn btn-outline-primary btn-sm rounded-circle">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card-footer bg-white border-0 pb-3">
+                        <button onclick="showDetails(@product.Id)" class="btn btn-primary w-100 shadow-sm bg-gradient">
+                            <i class="bi bi-cart-plus me-2"></i>Quick View
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="modal fade" id="productModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0">
+            <div class="modal-header border-0 pb-0">
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="modalBodyContent">
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function showDetails(id) {
+            $('#modalBodyContent').html('<div class="text-center p-5"><div class="spinner-border text-primary"></div></div>');
+            $('#productModal').modal('show');
+
+            $.ajax({
+                // Area wise URL fix
+                url: '/Customer/Home/Details?productId=' + id,
+                type: 'GET',
+                success: function (response) {
+                    $('#modalBodyContent').html(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                    alert("Error: Data load nahi ho saka.");
+                }
+            });
+        }
+    </script>
+}
+}
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .product-card {
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 1rem 3rem rgba(0,0,0,0.1) !important;
+        }
+
+    .carousel-item img {
+        height: 450px;
+        object-fit: cover;
+    }
+
+
+</style>

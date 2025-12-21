@@ -1,0 +1,75 @@
+﻿@model MVC.Models.Product
+
+<div class="row">
+    <div class="col-md-5 text-center">
+        <img src="@Model.ImageUrl" class="img-fluid rounded shadow-sm" alt="@Model.Title" />
+    </div>
+    <div class="col-md-7">
+        <h3 class="fw-bold text-primary">@Model.Title</h3>
+        <p class="text-muted mb-1">Category: <span class="badge bg-info">@Model.Category?.Name</span></p>
+        <p class="text-muted">Author: <strong>@Model.Author</strong></p>
+
+        <div class="my-3 p-3 bg-light rounded" style="max-height: 120px; overflow-y: auto;">
+            @Html.Raw(Model.Description)
+        </div>
+
+        <div class="p-3 mb-3 border rounded bg-white shadow-sm">
+            <div class="row align-items-center">
+                <div class="col-6">
+                    <small class="text-muted d-block">Your Total Price</small>
+                    <h4 class="text-danger fw-bold mb-0">
+                        $ <span id="totalPriceDisplay">@Model.Price100.ToString("0.00")</span>
+                    </h4>
+                </div>
+                <div class="col-6 text-end border-start">
+                    <small class="text-muted d-block">Actual List Price</small>
+                    <span class="text-decoration-line-through text-muted fw-bold">
+                        $ <span id="totalListPriceDisplay">@Model.ListPrice.ToString("0.00")</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <div class="row g-2">
+                <div class="col-4">
+                    <label class="small text-muted fw-bold">Quantity</label>
+                    <input type="number" id="txtQuantity" value="1"
+                           class="form-control border-primary shadow-sm" min="1" />
+                </div>
+                <div class="col-8 d-flex align-items-end">
+                    <button class="btn btn-primary bg-gradient w-100 py-2 fw-bold">
+                        <i class="bi bi-cart-plus-fill"></i> Add to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Dono prices ko variables mein parse kar liya
+        var unitPrice = parseFloat("@Model.Price100");
+        var listPrice = parseFloat("@Model.ListPrice");
+
+        $('#txtQuantity').on('input change', function () {
+            var qty = parseInt($(this).val());
+
+            if (qty < 1 || isNaN(qty)) {
+                qty = 1;
+                $(this).val(1);
+            }
+
+            // Calculations
+            var totalSalesPrice = (unitPrice * qty).toFixed(2);
+            var totalListPrice = (listPrice * qty).toFixed(2);
+
+            // Dono display elements ko update karna
+            $('#totalPriceDisplay').text(totalSalesPrice);
+            $('#totalListPriceDisplay').text(totalListPrice);
+
+            console.log("Qty: " + qty + " | Sales: " + totalSalesPrice + " | List: " + totalListPrice);
+        });
+    });
+</script>

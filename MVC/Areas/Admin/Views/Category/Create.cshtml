@@ -1,49 +1,98 @@
 ﻿@model Category
 
-<div class="card shadow border-0 mt-4">
-	<div class="card-header bg-secondary bg-gradient m-lg-0 py-3">
-		<div class="row">
-			<div class="col-12 text-center">
-				<h1 class="text-white py-2">Create Category</h1>
-			</div>
-		</div>
-	</div>
-	<div class="card-body p-4">
-		<form method="post" class="row">
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                <div class="card-header bg-white border-0 pt-4 pb-2">
+                    <div class="text-center">
+                        <h2 class="fw-bolder text-dark mb-1">Create Category</h2>
+                        <p class="text-muted small">Add a new category to organize your products.</p>
+                        <div class="header-line mx-auto"></div>
+                    </div>
+                </div>
 
-			<div class="border p-3">
-				
-				@* <div asp-validation-summary="ModelOnly"></div> *@
-				<div class="form-floating py-2 col-12">
-					<input asp-for="Name" class="form-control border-0 shadow" />
-					<label asp-for="Name" class="ms-2"></label>
-					<span asp-validation-for="Name" class="text-danger"></span>
-				</div>
-				<div class="form-floating py-2 col-12">
-					<input asp-for="DisplayOrder" class="form-control border-0 shadow" />
-					<label asp-for="DisplayOrder" class="ms-2"></label>
-					<span asp-validation-for="DisplayOrder" class="text-danger"></span>
-				</div>
-				<div class="row pt-2">
-					<div class="col-6 col-md-3">
-						<button type="submit" class="btn btn-primary form-controll">Create</button>
-					</div>
-					<div class="col-6 col-md-3">
-						<a asp-controller="Category" asp-action="Index" class="btn btn-outline-primary border form-controll">
-							Back to List
-						</a>
-					</div>
-				</div>
-			</div>
-		</form>
-	</div>
+                <div class="card-body p-4 p-md-5">
+                    <form method="post" class="needs-validation">
+                        @* Validation Summary for overall errors *@
+                        <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                        <div class="form-floating mb-4">
+                            <input asp-for="Name" class="form-control custom-input border-0 bg-light rounded-3 shadow-sm" placeholder="Category Name" />
+                            <label asp-for="Name" class="text-muted ps-3">Category Name</label>
+                            <span asp-validation-for="Name" class="text-danger x-small"></span>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input asp-for="DisplayOrder" class="form-control custom-input border-0 bg-light rounded-3 shadow-sm" placeholder="Display Order" />
+                            <label asp-for="DisplayOrder" class="text-muted ps-3">Display Order</label>
+                            <span asp-validation-for="DisplayOrder" class="text-danger x-small"></span>
+                        </div>
+
+                        <div class="row g-3 pt-2">
+                            <div class="col-sm-6">
+                                <button type="submit" class="btn btn-primary w-100 py-3 rounded-pill fw-bold shadow-sm hover-scale bg-gradient border-0">
+                                    <i class="bi bi-check-circle me-2"></i>Create Category
+                                </button>
+                            </div>
+                            <div class="col-sm-6">
+                                <a asp-controller="Category" asp-action="Index" class="btn btn-outline-secondary w-100 py-3 rounded-pill fw-bold shadow-sm border-2">
+                                    <i class="bi bi-arrow-left me-2"></i>Back to List
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
+<style>
+    /* Styling for the cool form */
+    .header-line {
+        width: 50px;
+        height: 4px;
+        background-color: #0d6efd;
+        border-radius: 2px;
+        margin-top: 10px;
+    }
 
+    .custom-input:focus {
+        background-color: #fff !important;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1) !important;
+        border: 1px solid #0d6efd !important;
+    }
 
+    .form-floating > label {
+        padding-left: 1rem;
+    }
 
-  @section Scripts{
-	  @{
-	  <partial name="_ValidationScriptsPartial" />
-     }
-  }
+    .hover-scale {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .hover-scale:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15) !important;
+        }
+
+    .x-small {
+        font-size: 0.75rem;
+        margin-top: 5px;
+        display: block;
+    }
+
+    /* Soft transition for inputs */
+    .form-control {
+        transition: all 0.3s ease-in-out;
+    }
+
+    .bg-light {
+        background-color: #f8f9fa !important;
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

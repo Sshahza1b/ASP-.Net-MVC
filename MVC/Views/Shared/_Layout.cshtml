@@ -13,40 +13,77 @@
     <link rel="stylesheet" href="//cdn.datatables.net/2.3.5/css/dataTables.dataTables.min.css" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-primary border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MVC</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Content Management
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li class="nav-item">
-                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">Category</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">Product</a>
-                                </li>
+    <header class="sticky-top">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm py-2 main-nav-white">
+            <div class="container">
               
-                                <li><hr class="dropdown-divider"></li>
 
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                    <i class="bi bi-list fs-1"></i>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                        <li class="nav-item">
+                            <a class="nav-link fw-bold text-dark hover-underline" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle fw-bold text-dark" href="#" role="button" data-bs-toggle="dropdown">
+                                Management
+                            </a>
+                            <ul class="dropdown-menu border-0 shadow animate slideIn">
+                                <li><a class="dropdown-item py-2" asp-area="Admin" asp-controller="Category" asp-action="Index"><i class="bi bi-tag me-2 text-primary"></i>Categories</a></li>
+                                <li><a class="dropdown-item py-2" asp-area="Admin" asp-controller="Product" asp-action="Index"><i class="bi bi-book me-2 text-primary"></i>Products</a></li>
                             </ul>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link fw-bold text-dark" asp-area="Customer" asp-controller="Home" asp-action="Privacy">About Us</a>
+                        </li>
                     </ul>
+
+                    <div class="d-flex align-items-center gap-4">
+                        <div class="d-none d-lg-flex search-box position-relative">
+                            <input id="navSearchInput" class="form-control form-control-sm bg-light border-0 ps-4 rounded-pill"
+                                   type="search" placeholder="Search books, authors..." style="width: 220px;">
+                            <i class="bi bi-search position-absolute start-0 top-50 translate-middle-y ms-2 text-muted small"></i>
+
+                            <div id="searchResults" class="position-absolute shadow-lg bg-white rounded-3 mt-5 w-100 d-none"
+                                 style="z-index: 1050; top: 0; max-height: 400px; overflow-y: auto;">
+                            </div>
+                        </div>
+                        <a href="#" class="nav-link text-dark position-relative p-0 cart-icon">
+                            <i class="bi bi-bag-handle fs-4"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-white" style="font-size: 0.65rem;">
+                                3
+                            </span>
+                        </a>
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div class="dropdown">
+                                <a class="nav-link dropdown-toggle fw-bold text-dark d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-person-circle fs-4 me-2 text-primary"></i> @User.Identity.Name
+                                </a>
+                                <ul class="dropdown-menu border-0 shadow animate slideIn">
+                                    <li><a class="dropdown-item py-2" href="#"><i class="bi bi-person me-2"></i> Profile</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                            <button type="submit" class="dropdown-item py-2 text-danger"><i class="bi bi-box-arrow-right me-2"></i> Logout</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+                        else
+                        {
+                            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#authModal" class="btn btn-primary rounded-pill px-4 btn-sm fw-bold shadow-sm bg-gradient">
+                                Sign In
+                            </a>
+                        }
+                    </div>
                 </div>
             </div>
         </nav>
@@ -56,6 +93,59 @@
             <partial name="_Notification" />
             @RenderBody()
         </main>
+    </div>
+
+    <div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 overflow-hidden rounded-4 shadow-lg">
+                <div class="modal-body p-0">
+                    <div class="row g-0">
+                        <div class="col-lg-5 d-none d-lg-block position-relative">
+                            <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=800&auto=format&fit=crop"
+                                 class="h-100 w-100 object-fit-cover blur-load" alt="Login Image">
+                            <div class="position-absolute top-50 start-50 translate-middle text-center w-100 text-white px-3" style="background: rgba(0,0,0,0.2); backdrop-filter: blur(5px); height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                                <h3 class="fw-bolder tracking-tighter">MVC STORE</h3>
+                                <p class="small opacity-75">Access the best collection of books with one click.</p>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-7 p-4 p-md-5 bg-white">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h4 class="fw-bolder mb-0 text-dark" id="modalTitle">Welcome Back</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+
+                            <ul class="nav nav-pills mb-4 bg-light rounded-pill p-1 shadow-sm" id="authTab" role="tablist">
+                                <li class="nav-item flex-fill" role="presentation">
+                                    <button class="nav-link active rounded-pill fw-bold w-100 py-2 border-0" id="login-tab" data-bs-toggle="pill" data-bs-target="#login" type="button">Login</button>
+                                </li>
+                                <li class="nav-item flex-fill" role="presentation">
+                                    <button class="nav-link rounded-pill fw-bold w-100 py-2 border-0" id="signup-tab" data-bs-toggle="pill" data-bs-target="#signup" type="button">Register</button>
+                                </li>
+                            </ul>
+
+                            <div class="tab-pane fade show active" id="login">
+                                <form id="loginForm">
+                                    <div id="loginError" class="alert alert-danger d-none p-2 small"></div>
+
+                                    <div class="form-floating mb-3">
+                                        <input type="email" name="email" id="loginEmail" class="form-control bg-light border-0 rounded-3 shadow-sm" placeholder="Email" required>
+                                        <label>Email Address</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input type="password" name="password" id="loginPassword" class="form-control bg-light border-0 rounded-3 shadow-sm" placeholder="Password" required>
+                                        <label>Password</label>
+                                    </div>
+                                    <button type="submit" id="btnLoginSubmit" class="btn btn-sexy-primary w-100 py-3 mt-3">
+                                        <span id="loginSpinner" class="spinner-border spinner-border-sm d-none me-2"></span> Login to Account
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <footer class="border-top footer bg-primary text-center">
@@ -72,3 +162,139 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+<style>
+    /* Premium White Theme Enhancements */
+    .main-nav-white {
+        background: rgba(255, 255, 255, 0.9) !important;
+        backdrop-filter: blur(15px); /* Premium blurry effect */
+        -webkit-backdrop-filter: blur(15px);
+    }
+
+    .navbar-brand {
+        letter-spacing: -1px;
+    }
+
+    .nav-link {
+        font-size: 0.95rem;
+        transition: color 0.3s ease;
+    }
+
+        .nav-link:hover {
+            color: #0d6efd !important;
+        }
+
+    /* Animated Underline */
+    .hover-underline::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: 5px;
+        left: 8px;
+        background-color: #0d6efd;
+        transition: width 0.3s ease;
+    }
+
+    .hover-underline:hover::after {
+        width: 80%;
+    }
+
+    /* Cart Icon Animation */
+    .cart-icon:hover {
+        transform: scale(1.1);
+        transition: transform 0.2s ease-in-out;
+    }
+
+    /* Search bar focus effect */
+    .search-box input:focus {
+        background-color: #fff !important;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+        width: 280px !important;
+        transition: width 0.4s ease;
+    }
+
+    /* Dropdown Animation */
+    .animate {
+        animation-duration: 0.2s;
+        animation-fill-mode: both;
+    }
+
+    @@keyframes slideIn {
+        0% {
+            transform: translateY(8px);
+            opacity: 0;
+        }
+
+        100% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .dropdown-menu {
+        border-radius: 15px;
+        padding: 10px;
+    }
+
+    .dropdown-item:hover {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        color: #0d6efd;
+    }
+
+    #searchResults {
+        transition: all 0.3s ease;
+        border: 1px solid #eee;
+    }
+
+    .hover-bg-light:hover {
+        background-color: #f8f9fa;
+        color: #0d6efd !important;
+    }
+
+    /* Custom scrollbar for search results */
+    #searchResults::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    #searchResults::-webkit-scrollbar-thumb {
+        background: #0d6efd;
+        border-radius: 10px;
+    }
+
+    .modal-lg {
+        max-width: 900px;
+    }
+
+    #authTab .nav-link {
+        color: #6c757d;
+        transition: all 0.3s ease;
+    }
+
+        #authTab .nav-link.active {
+            background: linear-gradient(45deg, #0d6efd, #00d4ff) !important;
+            color: white !important;
+            box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
+        }
+
+    .object-fit-cover {
+        object-fit: cover;
+    }
+
+    .form-floating > .form-control:focus {
+        background-color: white !important;
+        border: 1px solid #0d6efd !important;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1) !important;
+    }
+
+    /* Modal animation smooth zoom in */
+    .modal.fade .modal-dialog {
+        transform: scale(0.9);
+        transition: transform 0.3s ease-out;
+    }
+
+    .modal.show .modal-dialog {
+        transform: scale(1);
+    }
+</style>

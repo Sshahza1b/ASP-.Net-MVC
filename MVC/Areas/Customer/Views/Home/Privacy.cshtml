@@ -1,6 +1,114 @@
 ﻿@{
     ViewData["Title"] = "Privacy Policy";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<div class="container mt-5 overflow-hidden">
+    <div class="row align-items-center mb-5 gx-5 py-4">
+        <div class="col-md-6 aos-init" data-aos="fade-right">
+            <div class="zigzag-img-wrapper shadow-lg rounded-4 overflow-hidden">
+                <img src="https://www.shutterstock.com/image-vector/our-team-web-header-background-260nw-2556607743.jpg"
+                     class="img-fluid zigzag-img" alt="Our Team">
+            </div>
+        </div>
+        <div class="col-md-6 py-3">
+            <span class="text-primary fw-bold text-uppercase tracking-wider">Who We Are</span>
+            <h2 class="display-5 fw-bolder mb-3 text-dark">Our Story</h2>
+            <p class="lead text-muted">
+                Welcome to MVC Store! We started with a simple vision: to bring the best quality products directly to your doorstep with unmatched speed.
+            </p>
+            <p class="text-secondary">
+                Our team of passionate developers and creators work tirelessly to ensure your shopping experience is seamless, secure, and trendy. We believe in innovation and customer-first design.
+            </p>
+            <button class="btn btn-primary rounded-pill px-4 shadow-sm">Meet The Team</button>
+        </div>
+    </div>
+
+    <div class="row align-items-center mb-5 gx-5 py-4 flex-md-row-reverse">
+        <div class="col-md-6">
+            <div class="zigzag-img-wrapper shadow-lg rounded-4 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=800&auto=format&fit=crop"
+                     class="img-fluid zigzag-img" alt="Privacy & Security">
+            </div>
+        </div>
+        <div class="col-md-6 py-3 text-md-end">
+            <span class="text-success fw-bold text-uppercase tracking-wider">Safe & Secure</span>
+            <h2 class="display-5 fw-bolder mb-3 text-dark">Your Privacy</h2>
+            <p class="lead text-muted">
+                Data security is not just a policy for us; it's a promise. We use industry-standard encryption to keep your details safe.
+            </p>
+            <p class="text-secondary">
+                Your personal information is never shared with third parties. We only collect data that helps us improve your journey and provide personalized recommendations for your next favorite book.
+            </p>
+            <button class="btn btn-success rounded-pill px-4 shadow-sm">View Full Policy</button>
+        </div>
+    </div>
+
+    <div class="row align-items-center mb-5 gx-5 py-4">
+        <div class="col-md-6">
+            <div class="zigzag-img-wrapper shadow-lg rounded-4 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=800&auto=format&fit=crop"
+                     class="img-fluid zigzag-img" alt="Our Mission">
+            </div>
+        </div>
+        <div class="col-md-6 py-3">
+            <span class="text-warning fw-bold text-uppercase tracking-wider">Our Goal</span>
+            <h2 class="display-5 fw-bolder mb-3 text-dark">Our Mission</h2>
+            <p class="lead text-muted">
+                To bridge the gap between quality products and digital accessibility for everyone, everywhere.
+            </p>
+            <ul class="list-unstyled mt-3">
+                <li class="mb-2"><i class="bi bi-check-circle-fill text-primary me-2"></i> Quality Assurance</li>
+                <li class="mb-2"><i class="bi bi-check-circle-fill text-primary me-2"></i> 24/7 Global Support</li>
+                <li class="mb-2"><i class="bi bi-check-circle-fill text-primary me-2"></i> Fast Worldwide Shipping</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Zig Zag Styling */
+    .zigzag-img-wrapper {
+        transition: transform 0.4s ease;
+        border: 1px solid #eee;
+    }
+
+    .zigzag-img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        transition: transform 0.6s ease;
+    }
+
+    .zigzag-img-wrapper:hover {
+        transform: scale(1.02) rotate(1deg);
+        box-shadow: 0 1rem 3rem rgba(0,0,0,0.175) !important;
+    }
+
+        .zigzag-img-wrapper:hover .zigzag-img {
+            transform: scale(1.1);
+        }
+
+    .tracking-wider {
+        letter-spacing: 2px;
+        font-size: 0.85rem;
+    }
+
+    h2 {
+        letter-spacing: -1px;
+    }
+
+    .flex-md-row-reverse {
+        /* This handles the zig zag logic on desktop */
+    }
+
+    /* Extra 'Zig Zag' vibe for containers */
+    @@media (min-width: 768px) {
+        .row:nth-child(even) {
+            margin-left: 20px;
+        }
+
+        .row:nth-child(odd) {
+            margin-right: 20px;
+        }
+    }
+</style>
