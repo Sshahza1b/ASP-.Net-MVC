@@ -1,4 +1,5 @@
 ﻿$(document).ready(function () {
+    // --- 1. SEARCH FUNCTIONALITY ---
     $("#navSearchInput").on("keyup", function () {
         let query = $(this).val();
         let resultsDiv = $("#searchResults");
@@ -10,7 +11,7 @@
                 data: { query: query },
                 success: function (response) {
                     resultsDiv.empty().removeClass("d-none");
-                    if (response.data.length > 0) {
+                    if (response.data && response.data.length > 0) {
                         response.data.forEach(item => {
                             resultsDiv.append(`
                                 <a href="/Customer/Home/Details?productId=${item.id}" class="d-flex align-items-center p-2 border-bottom text-decoration-none text-dark hover-bg-light">
@@ -32,7 +33,69 @@
         }
     });
 
-    // Hide results when clicking outside
+    // --- 2. LOGIN FUNCTIONALITY ---
+    $("#loginForm").on("submit", function (e) {
+        e.preventDefault();
+
+        // IDs check karein (Modal HTML mein yehi honi chahiye)
+        let email = $("#lEmail").val() || $("#loginEmail").val();
+        let password = $("#lPassword").val() || $("#loginPassword").val();
+        let btn = $(this).find('button[type="submit"]');
+
+        btn.prop("disabled", true).text("Checking...");
+
+        $.ajax({
+            url: '/Customer/Account/Login',
+            type: 'POST',
+            data: { email: email, password: password },
+            success: function (response) {
+                if (response.success) {
+                    toastr.success(response.message);
+                    setTimeout(() => { window.location.reload(); }, 1000);
+                } else {
+                    toastr.error(response.message);
+                    btn.prop("disabled", false).text("Login to Account");
+                }
+            },
+            error: function () {
+                toastr.error("Server error! Check if DB is updated.");
+                btn.prop("disabled", false).text("Login to Account");
+            }
+        });
+    });
+
+    // --- 3. REGISTER FUNCTIONALITY ---
+    $("#registerForm").on("submit", function (e) {
+        e.preventDefault();
+
+        let email = $("#rEmail").val();
+        let password = $("#rPassword").val();
+        let btn = $(this).find('button[type="submit"]');
+
+        btn.prop("disabled", true).text("Creating Account...");
+
+        $.ajax({
+            url: '/Customer/Account/Register', // URL bilkul sahi honi chahiye
+            type: 'POST',
+            data: { email: email, password: password },
+            success: function (response) {
+                if (response.success) {
+                    toastr.success(response.message);
+                    setTimeout(() => { window.location.reload(); }, 1000);
+                } else {
+                    // Yahan Identity ke asli errors (like Password weak) nazar ayenge
+                    toastr.error(response.message);
+                    btn.prop("disabled", false).text("Create Account");
+                }
+            },
+            error: function () {
+                toastr.error("Server error! Make sure database tables exist.");
+                btn.prop("disabled", false).text("Create Account");
+            }
+        });
+    });
+
+    // Hide search results when clicking outside
     $(document).on("click", function (e) {
         if (!$(e.target).closest(".search-box").length) {
             $("#searchResults").addClass("d-none");
@@ -40,41 +103,20 @@
     });
 });
 
-$(document).ready(function () {
-    $("#loginForm").on("submit", function (e) {
-        e.preventDefault(); // Page refresh roknay ke liye
-
-        let email = $("#loginEmail").val();
-        let password = $("#loginPassword").val();
-        let btn = $("#btnLoginSubmit");
-        let spinner = $("#loginSpinner");
-        let errorDiv = $("#loginError");
-
-        // UI Changes
-        btn.prop("disabled", true);
-        spinner.removeClass("d-none");
-        errorDiv.addClass("d-none");
-
-        $.ajax({
-            url: '/Customer/Account/Login', // Aapka controller action
-            type: 'POST',
-            data: { email: email, password: password },
-            success: function (response) {
-                if (response.success) {
-                    toastr.success(response.message);
-                    // 1 second baad page reload karo taake login state update ho jaye
-                    setTimeout(() => { location.reload(); }, 1000);
-                } else {
-                    errorDiv.text(response.message).removeClass("d-none");
-                    btn.prop("disabled", false);
-                    spinner.addClass("d-none");
-                }
-            },
-            error: function () {
-                toastr.error("Something went wrong. Please try again.");
-                btn.prop("disabled", false);
-                spinner.addClass("d-none");
+function logoutUser() {
+    $.ajax({
+        url: '/Customer/Account/Logout',
+        type: 'POST',
+        success: function (response) {
+            if (response.success) {
+                toastr.success(response.message);
+                // Foran reload ya redirect karein
+                window.location.href = '/';
             }
-        });
+        },
+        error: function (xhr) {
+            console.log(xhr.responseText);
+            toastr.error("Logout failed! Error: " + xhr.status);
+        }
     });
-});
+}

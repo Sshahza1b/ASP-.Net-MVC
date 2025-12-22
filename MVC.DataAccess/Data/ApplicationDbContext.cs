@@ -1,13 +1,15 @@
 ﻿using MVC.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace MVC.DataAccess.Data
 {
-    public class ApplicationDbContext : DbContext
+    // 1. DbContext ko IdentityDbContext<IdentityUser> se change karein
+    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
-            
         }
 
         public DbSet<Category> Categories { get; set; }
@@ -15,7 +17,9 @@ namespace MVC.DataAccess.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-           
+            // 2. Identity tables ki configuration ke liye ye line sabse zaroori hai
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Category>().HasData(
                 new Category { Id = 1, Name = "Action", DisplayOrder = 1 },
                 new Category { Id = 2, Name = "Boil", DisplayOrder = 2 },
@@ -28,7 +32,7 @@ namespace MVC.DataAccess.Data
                     Id = 1,
                     Title = "Fortune of Time",
                     Author = "Billy Spark",
-                    Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
+                    Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac.",
                     ISBN = "SWD9999001",
                     ListPrice = 99,
                     Price = 90,
@@ -42,7 +46,7 @@ namespace MVC.DataAccess.Data
                     Id = 2,
                     Title = "Dark Skies",
                     Author = "Nancy Hoover",
-                    Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
+                    Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac.",
                     ISBN = "CAW777777701",
                     ListPrice = 40,
                     Price = 30,
@@ -56,7 +60,7 @@ namespace MVC.DataAccess.Data
                     Id = 3,
                     Title = "Vanish in the Sunset",
                     Author = "Julian Button",
-                    Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
+                    Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac.",
                     ISBN = "RITO5555501",
                     ListPrice = 55,
                     Price = 50,
@@ -70,7 +74,7 @@ namespace MVC.DataAccess.Data
                     Id = 4,
                     Title = "Cotton Candy",
                     Author = "Abby Muscles",
-                    Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
+                    Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac.",
                     ISBN = "WS3333333301",
                     ListPrice = 70,
                     Price = 65,
@@ -84,7 +88,7 @@ namespace MVC.DataAccess.Data
                     Id = 5,
                     Title = "Rock in the Ocean",
                     Author = "Ron Parker",
-                    Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
+                    Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac.",
                     ISBN = "SOTJ1111111101",
                     ListPrice = 30,
                     Price = 27,
@@ -98,7 +102,7 @@ namespace MVC.DataAccess.Data
                     Id = 6,
                     Title = "Leaves and Wonders",
                     Author = "Laura Phantom",
-                    Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
+                    Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac.",
                     ISBN = "FOT000000001",
                     ListPrice = 25,
                     Price = 23,
@@ -107,7 +111,7 @@ namespace MVC.DataAccess.Data
                     CategoryId = 3,
                     ImageUrl = ""
                 }
-                );
+            );
         }
     }
 }

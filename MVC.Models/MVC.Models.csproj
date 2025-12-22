@@ -12,5 +12,6 @@
 
 	<ItemGroup>
 	  <PackageReference Include="EntityFrameworkCore.SqlServer.HierarchyId" Version="4.0.0" />
+	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
 	</ItemGroup>
 </Project>
