@@ -29,15 +29,19 @@
                             <a class="nav-link fw-bold text-dark hover-underline" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
 
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle fw-bold text-dark" href="#" role="button" data-bs-toggle="dropdown">
-                                Management
-                            </a>
-                            <ul class="dropdown-menu border-0 shadow animate slideIn">
-                                <li><a class="dropdown-item py-2" asp-area="Admin" asp-controller="Category" asp-action="Index"><i class="bi bi-tag me-2 text-primary"></i>Categories</a></li>
-                                <li><a class="dropdown-item py-2" asp-area="Admin" asp-controller="Product" asp-action="Index"><i class="bi bi-book me-2 text-primary"></i>Products</a></li>
-                            </ul>
-                        </li>
+                        @* Sirf Admin ko dikhega *@
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle fw-bold text-dark" href="#" role="button" data-bs-toggle="dropdown">
+                                    Management
+                                </a>
+                                <ul class="dropdown-menu border-0 shadow animate slideIn">
+                                    <li><a class="dropdown-item py-2" asp-area="Admin" asp-controller="Category" asp-action="Index"><i class="bi bi-tag me-2 text-primary"></i>Categories</a></li>
+                                    <li><a class="dropdown-item py-2" asp-area="Admin" asp-controller="Product" asp-action="Index"><i class="bi bi-book me-2 text-primary"></i>Products</a></li>
+                                </ul>
+                            </li>
+                        }
 
                         <li class="nav-item">
                             <a class="nav-link fw-bold text-dark" asp-area="Customer" asp-controller="Home" asp-action="Privacy">About Us</a>
