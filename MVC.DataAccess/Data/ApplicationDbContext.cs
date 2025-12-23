@@ -12,13 +12,23 @@ namespace MVC.DataAccess.Data
         {
         }
 
+        //public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
 
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+        public DbSet<OrderHeader> OrderHeaders { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // 2. Identity tables ki configuration ke liye ye line sabse zaroori hai
             base.OnModelCreating(modelBuilder);
+
+            //modelBuilder.Entity<ApplicationUser>().HasBaseType<IdentityUser<string>>();
+            //modelBuilder.Entity<ApplicationUser>(entity => {
+            //    entity.HasBaseType<IdentityUser>();
+            //});
+
 
             modelBuilder.Entity<Category>().HasData(
                 new Category { Id = 1, Name = "Action", DisplayOrder = 1 },

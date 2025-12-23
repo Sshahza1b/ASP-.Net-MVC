@@ -2,11 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using MVC.DataAccess.Data;
 using MVC.DataAccess.Repository.IRepository;
+using MVC.Models;
 
 namespace MVC.DataAccess.Repository
 {
     public class DbInitializer : IDbInitializer
     {
+        // 1. Galti Fix: Sahi data type (ApplicationUser) aur variable name set kiya
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationDbContext _db;
@@ -29,17 +31,18 @@ namespace MVC.DataAccess.Repository
             }
             catch (Exception) { }
 
-            // 1. Roles banayein agar nahi hain
+            // Roles banayein agar nahi hain
             if (!_roleManager.RoleExistsAsync("Admin").GetAwaiter().GetResult())
             {
                 _roleManager.CreateAsync(new IdentityRole("Admin")).GetAwaiter().GetResult();
                 _roleManager.CreateAsync(new IdentityRole("Customer")).GetAwaiter().GetResult();
             }
 
-            // 2. Admin User check karein Email se (Role se nahi)
+            // 3. Galti Fix: IdentityUser ki jagah ApplicationUser ka object banayein
             var userInDb = _db.Users.FirstOrDefault(u => u.Email == "Admin@gmail.com");
             if (userInDb == null)
             {
+                // Sirf wo cheezain likhein jo IdentityUser mein hoti hain
                 var user = new IdentityUser
                 {
                     UserName = "Admin@gmail.com",

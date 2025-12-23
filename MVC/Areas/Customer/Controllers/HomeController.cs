@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVC.DataAccess.Repository.IRepository; // UnitOfWork ke liye
 using MVC.Models;
@@ -67,6 +69,35 @@ namespace MVC.Areas.Customer.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpPost]
+        [Authorize] // Sirf login user product add kar sakega
+        public IActionResult Details(ShoppingCart shoppingCart)
+        {
+            // Login user ki ID nikalna
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            shoppingCart.ApplicationUserId = userId;
+
+            // Check karein ke kya ye book pehle se cart mein hai?
+            ShoppingCart cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.ApplicationUserId == userId
+                && u.ProductId == shoppingCart.ProductId);
+
+            if (cartFromDb != null)
+            {
+                // Agar pehle se hai to quantity barha dein
+                cartFromDb.Count += shoppingCart.Count;
+                _unitOfWork.ShoppingCart.Update(cartFromDb);
+            }
+            else
+            {
+                // Naya entry add karein
+                _unitOfWork.ShoppingCart.Add(shoppingCart);
+            }
+
+            _unitOfWork.Save();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

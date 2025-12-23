@@ -43,10 +43,19 @@ namespace MVC.DataAccess.Repository
         }
 
         // Category, CoverType
-        public IEnumerable<T> GetAll(string? includeProperties = null)
+        // Purana GetAll hata kar ye naya wala lagayein
+        public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
-            if (! string.IsNullOrEmpty(includeProperties))
+
+            // 1. Agar filter (condition) bheji gayi hai to apply karein
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            // 2. Include properties ka logic (Jo pehle se apke pas tha)
+            if (!string.IsNullOrEmpty(includeProperties))
             {
                 foreach (var includeProp in includeProperties
                     .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))

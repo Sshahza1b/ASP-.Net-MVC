@@ -1,0 +1,109 @@
+﻿@model MVC.Models.ViewModels.ShoppingCartVM
+
+<form method="post">
+    <br />
+    <div class="container pb-5">
+        <div class="card shadow border-0 mt-4 rounded-4 overflow-hidden">
+            <div class="card-header bg-primary bg-gradient text-light py-4 border-0">
+                <div class="row px-4 align-items-center">
+                    <div class="col-6">
+                        <h3 class="text-white mb-0 fw-bold"><i class="bi bi-cart-check-fill me-2"></i>Order Summary</h3>
+                    </div>
+                    <div class="col-6 text-end">
+                        <a asp-action="Index" class="btn btn-outline-light btn-sm rounded-pill px-3">
+                            <i class="bi bi-arrow-left me-1"></i>Back to Cart
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body p-4 bg-light-subtle">
+                <div class="container rounded">
+                    <div class="row">
+                        <div class="col-12 col-lg-6 pb-4 border-end">
+                            <h4 class="d-flex justify-content-between align-items-center mb-4">
+                                <span class="text-primary fw-semibold">Shipping Details</span>
+                            </h4>
+
+                            <div class="mb-3">
+                                <label class="form-label text-secondary small text-uppercase fw-bold">Full Name</label>
+                                <div class="input-group border rounded-3 overflow-hidden">
+                                    <span class="input-group-text bg-white border-0"><i class="bi bi-person text-primary"></i></span>
+                                    <input asp-for="OrderHeader.Name" class="form-control border-0" placeholder="John Doe" />
+                                </div>
+                                <span asp-validation-for="OrderHeader.Name" class="text-danger small"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label text-secondary small text-uppercase fw-bold">Phone Number</label>
+                                <div class="input-group border rounded-3 overflow-hidden">
+                                    <span class="input-group-text bg-white border-0"><i class="bi bi-telephone text-primary"></i></span>
+                                    <input asp-for="OrderHeader.PhoneNumber" class="form-control border-0" placeholder="+92 3XX XXXXXXX" />
+                                </div>
+                                <span asp-validation-for="OrderHeader.PhoneNumber" class="text-danger small"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label text-secondary small text-uppercase fw-bold">Street Address</label>
+                                <div class="input-group border rounded-3 overflow-hidden">
+                                    <span class="input-group-text bg-white border-0"><i class="bi bi-house-door text-primary"></i></span>
+                                    <input asp-for="OrderHeader.StreetAddress" class="form-control border-0" placeholder="Street 123, Block X" />
+                                </div>
+                                <span asp-validation-for="OrderHeader.StreetAddress" class="text-danger small"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label text-secondary small text-uppercase fw-bold">City</label>
+                                <div class="input-group border rounded-3 overflow-hidden">
+                                    <span class="input-group-text bg-white border-0"><i class="bi bi-geo-alt text-primary"></i></span>
+                                    <input asp-for="OrderHeader.City" class="form-control border-0" placeholder="City Name" />
+                                </div>
+                                <span asp-validation-for="OrderHeader.City" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-5 offset-lg-1">
+                            <h4 class="mb-4">
+                                <span class="text-primary fw-semibold">Order Items</span>
+                            </h4>
+                            <div class="list-group list-group-flush mb-3 rounded-3 shadow-sm border">
+                                @foreach (var details in Model.ShoppingCartList)
+                                {
+                                    <li class="list-group-item d-flex justify-content-between align-items-center py-3 bg-white">
+                                        <div>
+                                            <h6 class="my-0 fw-bold">@details.Product.Title</h6>
+                                            <small class="text-muted">Quantity: <span class="badge bg-secondary rounded-pill">@details.Count</span></small>
+                                        </div>
+                                        <span class="fw-bold text-dark">@((details.Product.Price * details.Count).ToString("c"))</span>
+                                    </li>
+                                }
+                                <li class="list-group-item d-flex justify-content-between align-items-center bg-primary bg-opacity-10 py-3">
+                                    <span class="h5 text-primary mb-0 fw-bold">Grand Total</span>
+                                    <strong class="h5 text-primary mb-0 fw-bold">@Model.OrderHeader.OrderTotal.ToString("c")</strong>
+                                </li>
+                            </div>
+
+                            <div class="alert alert-info border-0 shadow-sm rounded-3 mt-4" role="alert">
+                                <i class="bi bi-truck me-2"></i>
+                                <span class="small fw-bold">Estimate Arrival Date:</span>
+                                <div class="small mt-1">@DateTime.Now.AddDays(7).ToShortDateString() - @DateTime.Now.AddDays(14).ToShortDateString()</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer bg-white py-4 border-0">
+                <div class="row justify-content-end">
+                    <div class="col-12 col-md-4">
+                        <button type="submit" value="Place Order" class="btn btn-primary bg-gradient w-100 py-3 rounded-pill fw-bold shadow-sm">
+                            PLACE ORDER NOW
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">

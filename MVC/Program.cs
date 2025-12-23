@@ -68,6 +68,7 @@ using Microsoft.EntityFrameworkCore;
 using MVC.DataAccess.Data;
 using MVC.DataAccess.Repository;
 using MVC.DataAccess.Repository.IRepository;
+using MVC.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -82,6 +83,14 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
+
+
+builder.Services.ConfigureApplicationCookie(options => {
+    options.LoginPath = $"/Identity/Account/Login";
+    options.LogoutPath = $"/Identity/Account/Logout";
+    options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+});
+
 
 builder.Services.AddRazorPages(); // Identity ke liye zaroori hai
 

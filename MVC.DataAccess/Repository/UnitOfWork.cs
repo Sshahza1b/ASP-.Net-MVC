@@ -13,11 +13,20 @@ namespace MVC.DataAccess.Repository
         private ApplicationDbContext _db;
         public ICategoryRepository Category { get; private set; }
         public IProductRepository Product { get; private set; }
+
+        public IShoppingCartRepository ShoppingCart { get; private set; }
+
+        public IOrderHeaderRepository OrderHeader { get; private set; }
+        public IApplicationUserRepository ApplicationUser { get; private set; }
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
             Category = new CategoryRepository(_db);
             Product = new ProductRepository(_db);
+            // UnitOfWork constructor ke andar ye do lines lazmi add karein:
+            ShoppingCart = new ShoppingCartRepository(_db);
+            ApplicationUser = new ApplicationUserRepository(_db);
+            OrderHeader = new OrderHeaderRepository(_db);
         }
         
 

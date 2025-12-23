@@ -31,18 +31,55 @@
         </div>
 
         <div class="mt-4">
-            <div class="row g-2">
-                <div class="col-4">
-                    <label class="small text-muted fw-bold">Quantity</label>
-                    <input type="number" id="txtQuantity" value="1"
-                           class="form-control border-primary shadow-sm" min="1" />
+            <form method="post" asp-action="Details">
+                <input hidden name="ProductId" value="@Model.Id" />
+
+                <div class="row g-2">
+                    <div class="col-4">
+                        <label class="small text-muted fw-bold">Quantity</label>
+                        <input type="number" id="txtQuantity" name="Count" value="1"
+                               class="form-control border-primary shadow-sm" min="1" />
+                    </div>
+                    <div class="col-8 align-self-end">
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            <button type="button" onclick="showLoginAlert()" class="btn btn-primary form-control">
+                                Add to Cart
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-primary form-control">
+                                Add to Cart
+                            </button>
+                        }
+
+                        <script>
+                                                      function showLoginAlert() {
+                                Swal.fire({
+                                    title: 'Please Login',
+                                    text: "You need to login to add items to cart",
+                                    icon: 'info',
+                                    showCancelButton: true,
+                                    confirmButtonText: 'Login Now',
+                                    cancelButtonText: 'Cancel',
+                                    confirmButtonColor: '#0d6efd' // Bootstrap primary color
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        // 1. Pehle SweetAlert ko close karein
+                                        Swal.close();
+
+                                        // 2. Layout mein jo modal hai usay trigger karein
+                                        // #authModal wahi ID hai jo aapke _Layout mein modal ki hai
+                                        var myModal = new bootstrap.Modal(document.getElementById('authModal'));
+                                        myModal.show();
+                                    }
+                                });
+                            }
+                        </script>
+                    </div>
                 </div>
-                <div class="col-8 d-flex align-items-end">
-                    <button class="btn btn-primary bg-gradient w-100 py-2 fw-bold">
-                        <i class="bi bi-cart-plus-fill"></i> Add to Cart
-                    </button>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>
