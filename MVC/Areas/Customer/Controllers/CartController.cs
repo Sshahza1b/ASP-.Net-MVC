@@ -6,10 +6,11 @@ using MVC.Models;
 using MVC.Models.ViewModels;
 
 [Area("Customer")]
-[Authorize]
+//[Authorize]
 public class CartController : Controller
 {
     private readonly IUnitOfWork _unitOfWork;
+    [BindProperty]
     public ShoppingCartVM ShoppingCartVM { get; set; }
 
     public CartController(IUnitOfWork unitOfWork)
@@ -17,27 +18,43 @@ public class CartController : Controller
         _unitOfWork = unitOfWork;
     }
 
+    // Is Method ki wajah se 404 aa raha tha, ab ye sahi hai
+    public IActionResult Index()
+    {
+        var claimsIdentity = (ClaimsIdentity)User.Identity;
+        var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+        ShoppingCartVM = new()
+        {
+            ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == userId, includeProperties: "Product"),
+            OrderHeader = new()
+        };
+
+        if (ShoppingCartVM.ShoppingCartList != null)
+        {
+            foreach (var cart in ShoppingCartVM.ShoppingCartList)
+            {
+                // Price calculation logic
+                ShoppingCartVM.OrderHeader.OrderTotal += (cart.Product.Price * cart.Count);
+            }
+        }
+
+        return View(ShoppingCartVM);
+    }
+
     public IActionResult Summary()
     {
         var claimsIdentity = (ClaimsIdentity)User.Identity;
         var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-
-
-
-        // Cart load karte waqt Product include lazmi karein
-        var cartList = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == userId, includeProperties: "Product");
-
         ShoppingCartVM = new()
         {
-            ShoppingCartList = cartList,
+            ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == userId, includeProperties: "Product"),
             OrderHeader = new()
         };
 
-        // User details fetch karein
+        // User details fill karna (Jo aapne manga tha)
         var user = _unitOfWork.ApplicationUser.Get(u => u.Id == userId);
-
-        // 500 Error se bachne ke liye Null Check aur calculation zaroori hai
         if (user != null)
         {
             //ShoppingCartVM.OrderHeader.Name = user.Name;
@@ -46,7 +63,6 @@ public class CartController : Controller
             //ShoppingCartVM.OrderHeader.City = user.City;
         }
 
-        // View mein prices dikhane ke liye calculation lazmi hai
         foreach (var cart in ShoppingCartVM.ShoppingCartList)
         {
             ShoppingCartVM.OrderHeader.OrderTotal += (cart.Product.Price * cart.Count);
@@ -64,6 +80,21 @@ public class CartController : Controller
 
         // 1. Cart Items load karein
         shoppingCartVM.ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == userId, includeProperties: "Product");
+
+        // CHECK 1: Agar cart khali hai
+        if (shoppingCartVM.ShoppingCartList.Count() == 0)
+        {
+            TempData["error"] = "Aapka cart khali hai! Please select items first.";
+            return RedirectToAction("Index", "Home");
+        }
+
+        // CHECK 2: Agar details null hain
+        if (string.IsNullOrEmpty(shoppingCartVM.OrderHeader.Name) ||
+            string.IsNullOrEmpty(shoppingCartVM.OrderHeader.PhoneNumber))
+        {
+            TempData["error"] = "Please fill all details before confirming.";
+            return RedirectToAction(nameof(Summary));
+        }
 
         // 2. OrderHeader details set karein
         shoppingCartVM.OrderHeader.OrderDate = System.DateTime.Now;

@@ -133,3 +133,23 @@
 </form>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+@section Scripts {
+    <script>
+        function validateInput() {
+            // 1. Check karein ke details fields khali to nahi hain
+            var name = document.getElementById("name").value;
+            var phone = document.getElementById("phone").value;
+            var address = document.getElementById("address").value;
+            var city = document.getElementById("city").value;
+
+            if (name == "" || phone == "" || address == "" || city == "") {
+                alert("Please fill all shipping details!");
+                return false;
+            }
+
+            // 2. Check karein ke cart khali to nahi (ye server-side se zyada behtar hota hai)
+            return true;
+        }
+    </script>
+}

@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -18,11 +21,15 @@
     <header class="sticky-top">
         <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm py-2 main-nav-white">
             <div class="container">
-              
                 <li class="nav-item">
-                    <a class="nav-link" asp-area="Customer" asp-controller="Cart" asp-action="Summary">
-                        <i class="bi bi-cart"></i> Cart
-                    </a>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a class="nav-link" asp-area="Customer" asp-controller="Cart" asp-action="Summary">Cart</a>
+                    }
+                    else
+                    {
+                        <a class="nav-link" style="pointer-events: none; opacity: 0.5;">Cart</a>
+                    }
                 </li>
 
                 <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
@@ -64,12 +71,12 @@
                                  style="z-index: 1050; top: 0; max-height: 400px; overflow-y: auto;">
                             </div>
                         </div>
-                        <a href="#" class="nav-link text-dark position-relative p-0 cart-icon">
+                        @* <a href="#" class="nav-link text-dark position-relative p-0 cart-icon">
                             <i class="bi bi-bag-handle fs-4"></i>
                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-white" style="font-size: 0.65rem;">
                                 3
                             </span>
-                        </a>
+                        </a> *@
 
                         @if (User.Identity.IsAuthenticated)
                         {
@@ -91,11 +98,7 @@
                         else
                         {
                             <div class="d-flex align-items-center gap-4">
-                                <div class="d-none d-lg-flex search-box position-relative">
-                                    <input id="navSearchInput" class="form-control form-control-sm bg-light border-0 ps-4 rounded-pill" type="search" placeholder="Search products...">
-                                    <i class="bi bi-search position-absolute start-0 top-50 translate-middle-y ms-2 text-muted small"></i>
-                                </div>
-
+                               
                                 <div class="d-flex align-items-center gap-3">
                                     @if (User.Identity.IsAuthenticated)
                                     {
