@@ -15,6 +15,8 @@ namespace MVC.DataAccess.Repository.IRepository
         IApplicationUserRepository ApplicationUser { get; }
 
         IOrderHeaderRepository OrderHeader { get; }
+
+        IOrderDetailsRepository OrderDetails { get; }
         void Save();
     }
 }
